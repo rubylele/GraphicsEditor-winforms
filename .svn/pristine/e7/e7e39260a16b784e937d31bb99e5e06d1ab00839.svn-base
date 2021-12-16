@@ -1,0 +1,164 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Forms;
+
+namespace Draw
+{
+	/// <summary>
+	/// Върху главната форма е поставен потребителски контрол,
+	/// в който се осъществява визуализацията
+	/// </summary>
+	public partial class MainForm : Form
+	{
+		/// <summary>
+		/// Агрегирания диалогов процесор във формата улеснява манипулацията на модела.
+		/// </summary>
+		/// 
+
+		private DialogProcessor dialogProcessor = new DialogProcessor();
+		public static List<DoubleBufferedPanel> viewPortList { get; set; } = new List<DoubleBufferedPanel>();
+		public static DoubleBufferedPanel CurrentViewPort { get; set; } = new DoubleBufferedPanel("New project");
+		public static Color BorderColor { get; set; } = new Color();
+		public static int untitledTabs = 1;
+		int width;
+		int height;
+		int borderWidth;
+
+		public MainForm()
+		{
+			//
+			// The InitializeComponent() call is required for Windows Forms designer support.
+			//
+			InitializeComponent();
+
+			CurrentViewPort.InitializeComponent();
+			tabMenu.SelectedTab.Text = "New Project";
+			viewPortList.Add(CurrentViewPort);
+			CurrentViewPort.Load += new EventHandler(ViewPortLoad);
+			panel1.Controls.Add(CurrentViewPort);
+			//
+			// TODO: Add constructor code after the InitializeComponent() call.
+			//
+		}
+
+		void ViewPortLoad(object sender, EventArgs e)
+		{
+			CurrentViewPort.Paint += new PaintEventHandler(ViewPortPaint);
+			CurrentViewPort.MouseDown += new MouseEventHandler(ViewPortMouseDown);
+			CurrentViewPort.MouseMove += new MouseEventHandler(ViewPortMouseMove);
+			CurrentViewPort.MouseUp += new MouseEventHandler(ViewPortMouseUp);
+		}
+
+		/// <summary>
+		/// Изход от програмата. Затваря главната форма, а с това и програмата.
+		/// </summary>
+		void openToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			openFileDialog1.ShowDialog();
+		}
+
+		private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+		{
+			OpenFileDialog openFile = new OpenFileDialog();
+			openFile.Filter = "Image File(*.png;)| *.draw; ";
+			if (openFile.ShowDialog() == DialogResult.OK)
+			{
+
+			}
+		}
+
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SaveFileDialog saveDialog = new SaveFileDialog
+			{
+				Filter = "draw file (*.png)|*.png",
+				Title = "Save an a file"
+			};
+
+			if (saveDialog.ShowDialog() == DialogResult.OK)
+			{
+				BinaryFormatter binaryFormatter = new BinaryFormatter();
+
+				FileStream stream = new FileStream(saveDialog.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+
+
+
+				stream.Close();
+			}
+		}
+		/// <summary>
+		/// Събитието, което се прихваща, за да се превизуализира при изменение на модела.
+		/// </summary>
+		void ViewPortPaint(object sender, PaintEventArgs e)
+		{
+			dialogProcessor.ReDraw(sender, e, CurrentViewPort);
+		}
+
+		/// <summary>
+		/// Бутон, който поставя на произволно място правоъгълник със зададените размери.
+		/// Променя се лентата със състоянието и се инвалидира контрола, в който визуализираме.
+		/// </summary>
+
+
+		/// <summary>
+		/// Прихващане на координатите при натискането на бутон на мишката и проверка (в обратен ред) дали не е
+		/// щракнато върху елемент. Ако е така то той се отбелязва като селектиран и започва процес на "влачене".
+		/// Промяна на статуса и инвалидиране на контрола, в който визуализираме.
+		/// Реализацията се диалогът с потребителя, при който се избира "най-горния" елемент от екрана.
+		/// </summary>
+		void ViewPortMouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (pickUpSpeedButton.Checked)
+			{
+				dialogProcessor.Selection = dialogProcessor.ContainsPoint(e.Location, CurrentViewPort);
+
+				if (dialogProcessor.Selection != null)
+				{
+					statusBar.Items[0].Text = "Последно действие: Селекция на примитив";
+					dialogProcessor.IsDragging = true;
+					dialogProcessor.LastLocation = e.Location;
+					CurrentViewPort.Refresh();
+				}
+				dialogProcessor.IsDragging = true;
+				dialogProcessor.LastLocation = e.Location;
+				CurrentViewPort.Refresh();
+			}
+
+			if (deleteBtn.Checked)
+			{
+				if (dialogProcessor.Selection != null)
+				{
+					CurrentViewPort.ShapeList.Remove(dialogProcessor.Selection);
+					statusBar.Items[0].Text = "Последно действие : изтриване на примитив";
+					CurrentViewPort.Refresh();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Прихващане на преместването на мишката.
+		/// Ако сме в режим на "влачене", то този елемент се транслира.
+		/// </summary>
+		void ViewPortMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (dialogProcessor.IsDragging)
+			{
+				if (dialogProcessor.Selection != null)
+					statusBar.Items[0].Text = "Последно действие: Влачене";
+				dialogProcessor.TranslateTo(e.Location);
+			}
+			CurrentViewPort.Refresh();
+		}
+
+		/// <summary>
+		/// Прихващане на отпускането на бутона на мишката.
+		/// Излизаме от режим "влачене".
+		/// </summary>
+		void ViewPortMouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			dialogProcessor.IsDragging = false;
+		}

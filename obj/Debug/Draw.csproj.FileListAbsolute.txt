@@ -1,0 +1,13 @@
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\bin\Debug\Draw.exe
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\bin\Debug\Draw.pdb
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\obj\Debug\Draw.csprojAssemblyReference.cache
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\obj\Debug\Draw.DoubleBufferedPanel.resources
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\obj\Debug\Draw.MainForm.resources
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\obj\Debug\Draw.csproj.GenerateResource.cache
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\obj\Debug\Draw.csproj.CoreCompileInputs.cache
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\obj\Debug\Draw.exe
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\obj\Debug\Draw.pdb
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\bin\Debug\Newtonsoft.Json.dll
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\bin\Debug\Newtonsoft.Json.xml
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\obj\Debug\Draw.csproj.CopyComplete
+C:\Users\leonm\Desktop\gpi projects\Start\C#\VisualStudio2008-WinForms\obj\Debug\Draw.Properties.Resources.resources
